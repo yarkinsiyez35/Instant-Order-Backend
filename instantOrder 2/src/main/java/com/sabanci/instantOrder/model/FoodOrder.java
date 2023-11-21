@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Document
 public class FoodOrder {
     @Id
+    @Field("_id")
     private String objectId;
     @DBRef
     private Food food;

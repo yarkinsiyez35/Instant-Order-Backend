@@ -11,6 +11,7 @@ import java.util.Objects;
 public class Employee {
 
     @Id
+    @Field("_id")
     private String objectId;
     @Field("employeeId")
     private int employeeId;

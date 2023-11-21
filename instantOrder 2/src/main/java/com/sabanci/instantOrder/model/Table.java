@@ -11,6 +11,7 @@ import java.util.Objects;
 @Document
 public class Table {
     @Id
+    @Field("_id")
     private String objectId;
     @Field("tableId")
     private int tableId;

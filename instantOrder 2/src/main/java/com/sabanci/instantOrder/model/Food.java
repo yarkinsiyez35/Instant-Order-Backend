@@ -10,6 +10,7 @@ import java.util.Objects;
 public class Food {
 
     @Id
+    @Field("_id")
     private String objectId;
     @Field("name")
     private String name;
