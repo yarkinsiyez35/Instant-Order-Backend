@@ -11,12 +11,14 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 
-    List<Employee> findAllBy();
     Optional<Employee> findEmployeeByObjectId(String objectId);
-
     Optional<Employee> findEmployeeByEmployeeId(int empId);
     List<Employee> findEmployeesByFirstNameIgnoreCase(String objectId);
+    Optional<Employee> findEmployeeByFirstName(String name);
 
     List<Employee> findEmployeesByLastNameIgnoreCase(String objectId);
+    boolean existsEmployeeByEmployeeId(int empId);
+    boolean existsEmployeeByObjectId(String objectId);
+    boolean existsEmployeeByEmployeeIdAndPassword(int empId, String password);
 
 }

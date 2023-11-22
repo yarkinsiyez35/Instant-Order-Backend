@@ -11,7 +11,6 @@ import java.util.Objects;
 public class Employee {
 
     @Id
-    @Field("_id")
     private String objectId;
     @Field("employeeId")
     private int employeeId;
@@ -23,6 +22,14 @@ public class Employee {
     private String lastName;
 
     public Employee() {
+    }
+
+    public Employee(String objectId, int employeeId, String password, String firstName, String lastName) {
+        this.objectId = objectId;
+        this.employeeId = employeeId;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public Employee(int employeeId, String password, String firstName, String lastName) {
@@ -70,19 +77,6 @@ public class Employee {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Employee employee = (Employee) o;
-        return employeeId == employee.employeeId && Objects.equals(objectId, employee.objectId) && Objects.equals(password, employee.password) && Objects.equals(firstName, employee.firstName) && Objects.equals(lastName, employee.lastName);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(objectId, employeeId, password, firstName, lastName);
     }
 
     @Override

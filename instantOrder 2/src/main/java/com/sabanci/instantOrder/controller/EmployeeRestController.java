@@ -3,8 +3,12 @@ package com.sabanci.instantOrder.controller;
 
 import com.sabanci.instantOrder.model.Employee;
 import com.sabanci.instantOrder.repo.EmployeeRepository;
+import com.sabanci.instantOrder.service.EmployeeService;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -15,37 +19,86 @@ import java.util.Optional;
 @RequestMapping("/instantOrder")
 public class EmployeeRestController {
 
-
-
-    private final EmployeeRepository employeeRepository;
+    private EmployeeService employeeService;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
-    EmployeeRestController(EmployeeRepository employeeRepository1){
+    EmployeeRestController(EmployeeService employeeService1, EmployeeRepository employeeRepository1)
+    {
+        this.employeeService = employeeService1;
         this.employeeRepository = employeeRepository1;
     }
+
     @GetMapping("/employees")
     public List<Employee> getEmployees()
     {
-        return employeeRepository.findAll();
+        return employeeService.getEmployees();
     }
 
     @GetMapping("/employees/{employeeId}")
-    public Employee getEmployee(@PathVariable int employeeId)
+    public ResponseEntity<Object> getEmployee(@PathVariable int employeeId)
     {
-        Optional<Employee> employee = employeeRepository.findEmployeeByEmployeeId(employeeId);
-        if (employee.isPresent())
+        try
         {
-            return  employee.get();
+            Employee searchedEmployee = employeeService.findEmployeeByEmployeeId(employeeId);
+            return ResponseEntity.ok(searchedEmployee);
         }
-        else
+        catch(RuntimeException e)
         {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found with ID: " + employeeId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
+
+
     @PostMapping("/employees/save")
-    public Employee saveEmployee(@RequestBody Employee employee)
+    public ResponseEntity<Object> addEmployee(@RequestBody Employee employee)
     {
-        return employeeRepository.save(employee);
+        try
+        {
+            if (employeeService.addEmployee(employee) != null)
+            {
+                return ResponseEntity.ok(employee);
+            }
+            else
+            {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something is wrong");
+            }
+        }
+        catch (RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Controller: " + e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/employees/save")
+    public ResponseEntity<Object> updateEmployee(@RequestBody Employee emp)
+    {
+        try
+        {
+            //Optional<Employee> searchedEmployee = employeeRepository.findById(name);
+            Employee updatedEmployee = employeeService.updateEmployee(emp);
+            return ResponseEntity.ok(updatedEmployee);
+        }
+        catch(RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Controller: " + e.getMessage());
+        }
+    }
+
+
+    @DeleteMapping("/employees/delete")
+    public ResponseEntity<Object> deleteEmployee(@RequestBody String name)
+    {
+        try
+        {
+            Employee searchedEmployee = employeeService.findEmployeeByName(name);
+            return ResponseEntity.ok(name);
+        }
+        catch(RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage() + "controller!");
+        }
     }
 }
