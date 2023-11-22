@@ -24,7 +24,6 @@ public class Food {
         this.price = price;
     }
 
-
     public String getObjectId() {
         return objectId;
     }
@@ -50,7 +49,7 @@ public class Food {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Food food = (Food) o;
-        return Double.compare(price, food.price) == 0 && Objects.equals(objectId, food.objectId) && Objects.equals(name, food.name);
+        return Double.compare(price, food.price) == 0 && objectId.equals(food.objectId) && name.equals(food.name);
     }
 
     @Override

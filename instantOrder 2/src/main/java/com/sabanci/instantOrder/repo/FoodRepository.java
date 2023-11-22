@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface FoodRepository extends MongoRepository<Food, String> {
 
     List<Food> findAllBy();
-    Optional<Food> findFoodByObjectId(String s);
-    Optional<Food> findFoodByName(String s);
-
+    Optional<Food> findFoodByObjectId(String objectId);
+    Optional<Food> findFoodByName(String name);
+    boolean existsFoodByName(String name);
+    boolean existsFoodByObjectId(String objectId);
 }

@@ -17,5 +17,4 @@ public interface FoodOrderRepository extends MongoRepository<FoodOrder, String> 
     List<FoodOrder> findFoodOrderByTableId(int i);
     List<FoodOrder> findFoodOrderByFood(Food f);
 
-
 }
