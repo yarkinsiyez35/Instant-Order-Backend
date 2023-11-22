@@ -23,6 +23,17 @@ public class Table {
     @Field("paid")
     private boolean paymentReceived;
 
+    public Table(int tableId, int employeeId, List<FoodOrder> foodOrders, boolean paymentReceived) {
+        this.tableId = tableId;
+        this.employeeId = employeeId;
+        this.foodOrders = foodOrders;
+        this.paymentReceived = paymentReceived;
+    }
+
+    public Table(int tableId) {
+        this.tableId = tableId;
+    }
+
     public String getObjectId() {
         return objectId;
     }

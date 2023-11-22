@@ -26,6 +26,11 @@ public class Category {
         this.foods = foods;
     }
 
+    public Category(String name)
+    {
+        this.name = name;
+    }
+
     public String getObjectId() {
         return objectId;
     }
@@ -44,6 +49,10 @@ public class Category {
 
     public void setFoods(List<Food> foods) {
         this.foods = foods;
+    }
+    public void addFood(Food food)
+    {
+        this.foods.add(food);
     }
 
     @Override

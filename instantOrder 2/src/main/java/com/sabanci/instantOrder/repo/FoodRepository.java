@@ -14,6 +14,7 @@ public interface FoodRepository extends MongoRepository<Food, String> {
     List<Food> findAllBy();
     Optional<Food> findFoodByObjectId(String objectId);
     Optional<Food> findFoodByName(String name);
+
     boolean existsFoodByName(String name);
     boolean existsFoodByObjectId(String objectId);
 }

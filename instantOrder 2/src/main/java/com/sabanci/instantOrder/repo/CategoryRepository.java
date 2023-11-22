@@ -13,11 +13,13 @@ import java.util.Optional;
 public interface CategoryRepository extends MongoRepository<Category,String> {
 
     List<Category> findAllBy();
-    Optional<Category> findCategoryByObjectId(String s);
-    Optional<Category> findCategoryByName(String s);
+    Optional<Category> findCategoryByObjectId(String objectId);
+    Optional<Category> findCategoryByName(String name);
 
-    @Query(value = "{ '_id' : ?0 }", fields = "{ 'foods' : 1 }")
-    List<Food> findFoodsByCategoryId(String categoryId);
+    boolean existsCategoriesByName(String name);
+    boolean existsCategoriesByObjectId(String objectId);
+
+
 
 
 }
