@@ -11,14 +11,9 @@ import java.util.Optional;
 @Repository
 public interface EmployeeRepository extends MongoRepository<Employee, String> {
 
-    Optional<Employee> findEmployeeByObjectId(String objectId);
-    Optional<Employee> findEmployeeByEmployeeId(int empId);
-    List<Employee> findEmployeesByFirstNameIgnoreCase(String objectId);
-    Optional<Employee> findEmployeeByFirstName(String name);
-
-    List<Employee> findEmployeesByLastNameIgnoreCase(String objectId);
-    boolean existsEmployeeByEmployeeId(int empId);
-    boolean existsEmployeeByObjectId(String objectId);
-    boolean existsEmployeeByEmployeeIdAndPassword(int empId, String password);
-
+    Optional<Employee> findEmployeeByObjectId(String objectId);         //finds Employee by objectId
+    Optional<Employee> findEmployeeByEmployeeId(int empId);             //finds Employee by employeeId
+    boolean existsEmployeeByEmployeeId(int empId);                      //returns true if an Employee has empId as employeeId
+    boolean existsEmployeeByObjectId(String objectId);                  //returns true if an Employee has objectId as objectId
+    boolean existsEmployeeByEmployeeIdAndPassword(int empId, String password);      //returns true if an Employee exists with empId and password
 }

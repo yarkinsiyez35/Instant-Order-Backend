@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class FoodOrderServe {
 
     @Id
-    @Field("_id")
     private String objectId;
 
     @Field("foodOrder")

@@ -20,13 +20,11 @@ import java.util.Optional;
 public class EmployeeRestController {
 
     private EmployeeService employeeService;
-    private EmployeeRepository employeeRepository;
 
     @Autowired
-    EmployeeRestController(EmployeeService employeeService1, EmployeeRepository employeeRepository1)
+    EmployeeRestController(EmployeeService employeeService1)
     {
         this.employeeService = employeeService1;
-        this.employeeRepository = employeeRepository1;
     }
 
     @GetMapping("/employees")
@@ -49,25 +47,17 @@ public class EmployeeRestController {
         }
     }
 
-
-
     @PostMapping("/employees/save")
     public ResponseEntity<Object> addEmployee(@RequestBody Employee employee)
     {
         try
         {
-            if (employeeService.addEmployee(employee) != null)
-            {
-                return ResponseEntity.ok(employee);
-            }
-            else
-            {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Something is wrong");
-            }
+            Employee addedEmployee = employeeService.addEmployee(employee);
+            return ResponseEntity.status(HttpStatus.OK).body(addedEmployee);
         }
         catch (RuntimeException e)
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Controller: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -77,28 +67,26 @@ public class EmployeeRestController {
     {
         try
         {
-            //Optional<Employee> searchedEmployee = employeeRepository.findById(name);
             Employee updatedEmployee = employeeService.updateEmployee(emp);
             return ResponseEntity.ok(updatedEmployee);
         }
         catch(RuntimeException e)
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Controller: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-
     @DeleteMapping("/employees/delete")
-    public ResponseEntity<Object> deleteEmployee(@RequestBody String name)
+    public ResponseEntity<Object> deleteEmployee(@RequestBody Employee employee)
     {
         try
         {
-            Employee searchedEmployee = employeeService.findEmployeeByName(name);
-            return ResponseEntity.ok(name);
+            Employee deletedEmployee = employeeService.deleteEmployee(employee);
+            return ResponseEntity.ok(deletedEmployee);
         }
         catch(RuntimeException e)
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage() + "controller!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

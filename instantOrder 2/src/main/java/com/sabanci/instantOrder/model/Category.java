@@ -11,7 +11,6 @@ import java.util.Objects;
 @Document
 public class Category {
     @Id
-    @Field("_id")
     private String objectId;
     @Field("name")
     private String name;

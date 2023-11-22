@@ -11,7 +11,6 @@ import java.util.Objects;
 @Document
 public class Menu {
     @Id
-    @Field("_id")
     private String objectId;
     @Field("categories")
     @DBRef
