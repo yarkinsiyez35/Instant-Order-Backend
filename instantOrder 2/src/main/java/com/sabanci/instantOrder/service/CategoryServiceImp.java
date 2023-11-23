@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,12 +130,120 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
+    public Category addFoodToCategory(Category category, Food food)
+    {   //it is assumed that category exists
+        //this method will add Food to the given category
+        try
+        {
+            if(!foodRepository.existsFoodByName(food.getName()))    //food.name does not exist in the database
+            {
+                if(!foodRepository.existsFoodByObjectId(food.getObjectId()))
+                {   //food.objectId does not exist in the database --> new Food
+
+                    Food addedFood = foodRepository.save(food); //this assignment is done just in case food.objectId is null
+                    category.addFood(addedFood);
+                }
+                else
+                {   //food.objectId exists in the database
+                    throw new RuntimeException(food + " has existing objectId but non existing name!");
+                }
+            }
+            else
+            {   //food.name exists in the database
+                Food existingFood = foodRepository.findFoodByName(food.getName()).get();    //it is guarenteed that food.name exists in the database
+                if (existingFood.equals(food))
+                {   //food is correct
+                    category.addFood(existingFood);
+                }
+                else
+                {   //food input is incorrect, objectId and/or price are different
+                    throw new RuntimeException(food + " & " + existingFood + " does not match!");
+                }
+            }
+        }
+        catch(RuntimeException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        category = categoryRepository.save(category);
+        return category;
+    }
+
+    @Override
+    public Category addFoodsToCategory(Category category, List<Food> foods)
+    { //it is assumed that category exists
+        //this method will add Foods to given category
+        //this method has all or nothing approach
+        if (foods.isEmpty())        //prevention against empty list
+        {
+            throw new RuntimeException("Empty request body!");
+        }
+        List<Food> foodsToAddToCategory = new ArrayList<>();
+        List<Food> foodsToAddToFoodRepository = new ArrayList<>();
+        try
+        {
+            for(Food foodToAdd: foods)      //for each food
+            {
+                if(!foodRepository.existsFoodByName(foodToAdd.getName()))   //foodName does not exist in the database
+                {
+                    if(!foodRepository.existsFoodByObjectId(foodToAdd.getObjectId())) //objectId does not exist in the database
+                    {   //completely new Food
+                        foodsToAddToFoodRepository.add(foodToAdd);
+                    }
+                    else    //foodName does not exist but objectId exists, wrong input
+                    {
+                        throw new RuntimeException(foodToAdd + " has existing objectId but nonexistent name!");
+                    }
+                }
+                else
+                {   //foodName exists in repository
+                    //objectId and price should be checked
+                    //this upcoming assignment prevents from adding Food with different price
+                    Food existingFoodToAdd = foodRepository.findFoodByName(foodToAdd.getName()).get();  //it is guaranteed that foodName exists in the database
+                    if(existingFoodToAdd.equals(foodToAdd)) //if they are the same food
+                    {
+                        foodsToAddToCategory.add(existingFoodToAdd);
+                    }
+                    else    //either objectId is wrong or price is wrong
+                    {
+                        throw new RuntimeException("Price or objectId of " + foodToAdd + " is incorrect!");
+                    }
+                }
+            }
+        }
+        catch(RuntimeException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+        //creates Food in foodRepository
+        for(Food foodToAddToFoodRepository : foodsToAddToFoodRepository)
+        {
+            Food savedFood = foodRepository.save(foodToAddToFoodRepository);
+            foodsToAddToCategory.add(savedFood);
+        }
+        //adds Food to category
+        for(Food foodtoAddToCategory: foodsToAddToCategory)
+        {
+            category.addFood(foodtoAddToCategory);
+        }
+        //adds the category to repository
+        category = categoryRepository.save(category);
+        //returns the category
+        return category;
+    }
+
+    @Override
     public Category addFoodToCategoryByName(String name, Food food)
-    {   //adds Food if Category exists by name and returns updated Category, throws exception otherwise
+    {   //adds Food if Category exists by name, adds Food to foodRepository if it does not exist, returns updated Category, throws exception otherwise
         try
         {
             Category searchedCategory = findCategoryByName(name);
             searchedCategory.addFood(food);
+            if(!foodRepository.existsFoodByObjectId(food.getObjectId()))            //if Food is not in the database
+            {
+                Food addedFood = foodRepository.save(food);
+                searchedCategory.addFood(addedFood);
+            }
             return updateCategory(searchedCategory);
         }
         catch(RuntimeException e)
@@ -157,6 +266,20 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
+    public Category addCategoryByName(String categoryName)
+    {   //adds and returns Category if it has a unique name, throws exception otherwise
+        if(categoryRepository.existsCategoriesByName(categoryName))
+        {
+            throw new RuntimeException("Category with name: "+ categoryName + " already exists!");
+        }
+        else
+        {
+            Category addedCategory = new Category(categoryName, new ArrayList<>());
+            return  categoryRepository.save(addedCategory);
+        }
+    }
+
+    @Override
     public Category updateCategory(Category category)
     {   //updates and returns Category if it exists, throws exception otherwise
         if (categoryRepository.existsCategoriesByObjectId(category.getObjectId()))
@@ -165,7 +288,7 @@ public class CategoryServiceImp implements CategoryService{
         }
         else
         {
-            throw new RuntimeException("Category with objectId: " + category.getObjectId() + " does not exist!");
+            throw new RuntimeException("Category with objectId: " + category.getObjectId() + " cannot be updated!");
         }
     }
 
@@ -175,12 +298,17 @@ public class CategoryServiceImp implements CategoryService{
         Optional<Category> toBeDeletedCategory = categoryRepository.findCategoryByObjectId(category.getObjectId());
         if(toBeDeletedCategory.isPresent())
         {
+            //get foods in category
+            List<Food> foods = category.getFoods();
+            //delete foods in category
+            foodRepository.deleteAll(foods);
+            //delete category
             categoryRepository.delete(category);
             return toBeDeletedCategory.get();
         }
         else
         {
-            throw new RuntimeException("Category with objectId: " + category.getObjectId() + " cannot be deleted");
+            throw new RuntimeException("Category with objectId: " + category.getObjectId() + " cannot be deleted!");
         }
     }
 }

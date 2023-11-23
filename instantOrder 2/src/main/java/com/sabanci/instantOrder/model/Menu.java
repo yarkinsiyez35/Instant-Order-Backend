@@ -31,6 +31,11 @@ public class Menu {
         return categories;
     }
 
+    public void addCategory(Category category)
+    {
+        this.categories.add(category);
+    }
+
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }

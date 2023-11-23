@@ -14,6 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/instantOrder")
 public class FoodRestController {
+    //this controller is responsible for:
+    //@Get List<Food>
+    //@Get Food
+    //@Put Food
+
+
     FoodService foodService;
     @Autowired
     FoodRestController(FoodService foodService1)
@@ -40,21 +46,6 @@ public class FoodRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-    @PostMapping("/foods/save")
-    public ResponseEntity<Object> addFood(@RequestBody Food food)
-    {
-        try
-        {
-            Food searchedFood = foodService.addFood(food);
-            return ResponseEntity.status(HttpStatus.OK).body(searchedFood);
-        }
-        catch (RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     @PutMapping("/foods/save")
     public ResponseEntity<Object> updateFood(@RequestBody Food food)
     {
@@ -68,19 +59,4 @@ public class FoodRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-    @DeleteMapping("/foods/delete")
-    public ResponseEntity<Object> deleteFood(@RequestBody Food food)
-    {
-        try
-        {
-            Food deletedFood = foodService.deleteFood(food);
-            return ResponseEntity.status(HttpStatus.OK).body(deletedFood);
-        }
-        catch(RuntimeException e)
-        {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
 }
