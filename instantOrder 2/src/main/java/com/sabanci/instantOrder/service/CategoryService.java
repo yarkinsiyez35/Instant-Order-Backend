@@ -13,8 +13,11 @@ public interface CategoryService {
     List<Food> findFoodsByCategoryName(String name);
     List<Food> findFoodsByCategoryObjectId(String objectId);
     Category addFoodToCategoryByObjectId(String objectId, Food food);
+    Category addFoodToCategory(Category category, Food food);
+    Category addFoodsToCategory(Category category, List<Food> foods);
     Category addFoodToCategoryByName(String name, Food food);
     Category addCategory(Category category);
+    Category addCategoryByName(String categoryName);
     Category updateCategory(Category category);
     Category deleteCategory(Category category);
 }

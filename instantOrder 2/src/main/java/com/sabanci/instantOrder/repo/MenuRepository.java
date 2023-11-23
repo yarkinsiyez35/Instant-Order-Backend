@@ -13,11 +13,8 @@ public interface MenuRepository extends MongoRepository<Menu, String> {
 
 
 
+
     Optional<Category> findByCategories(Category category);
-
-
-
-
 
 
 
