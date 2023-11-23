@@ -55,6 +55,11 @@ public class Category {
         this.foods.add(food);
     }
 
+    public boolean foodExists(Food food)
+    {
+        return this.foods.contains(food);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -16,6 +16,11 @@ public interface CategoryService {
     Category addFoodToCategory(Category category, Food food);
     Category addFoodsToCategory(Category category, List<Food> foods);
     Category addFoodToCategoryByName(String name, Food food);
+    Food findFoodByCategoryAndFoodName(Category category, String foodName);
+
+    Food findFoodByCategoryAndFoodObjectId(Category category, String foodObjectId);
+
+
     Category addCategory(Category category);
     Category addCategoryByName(String categoryName);
     Category updateCategory(Category category);

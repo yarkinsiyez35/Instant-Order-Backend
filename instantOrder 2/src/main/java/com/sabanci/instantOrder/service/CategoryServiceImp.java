@@ -253,6 +253,62 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
+    public Food findFoodByCategoryAndFoodName(Category category, String foodName)
+    {   //it is assumed that Category exists
+        try
+        {
+            Optional<Food> searchedFood = foodRepository.findFoodByName(foodName);
+            if(searchedFood.isPresent())
+            {
+                if(category.foodExists(searchedFood.get()))
+                {
+                    return searchedFood.get();
+                }
+                else
+                {
+                    throw new RuntimeException("Food with name: " + foodName + " does not exist in Category with name: " + category.getName());
+                }
+            }
+            else
+            {
+                throw new RuntimeException("Food with name: " + foodName + " does not exist");
+            }
+
+        }
+        catch (RuntimeException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Food findFoodByCategoryAndFoodObjectId(Category category, String foodObjectId) {
+        try
+        {
+            Optional<Food> searchedFood = foodRepository.findFoodByObjectId(foodObjectId);
+            if(searchedFood.isPresent())
+            {
+                if(category.foodExists(searchedFood.get()))
+                {
+                    return searchedFood.get();
+                }
+                else
+                {
+                    throw new RuntimeException("Food with objectId: " + foodObjectId + " does not exist in Category with name: " + category.getName());
+                }
+            }
+            else
+            {
+                throw new RuntimeException("Food with objectId: " + foodObjectId + " does not exist");
+            }
+        }
+        catch (RuntimeException e)
+        {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
     public Category addCategory(Category category)
     {   //adds and returns Category if it has unique name, throws exception otherwise
         if(categoryRepository.existsCategoriesByName(category.getName()))

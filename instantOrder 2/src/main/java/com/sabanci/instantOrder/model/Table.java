@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,55 +20,80 @@ public class Table {
     private int employeeId;
     @Field("foodOrders")
     @DBRef
-    private List<FoodOrder> foodOrders;
+    private List<FoodOrderTable> foodOrders;
     @Field("paid")
     private boolean paymentReceived;
 
-    public Table(int tableId, int employeeId, List<FoodOrder> foodOrders, boolean paymentReceived) {
+    @Field("total")
+    private double total;
+
+    public Table(){}
+
+    public Table(int tableId, int employeeId, List<FoodOrderTable> foodOrders, boolean paymentReceived, double total) {
         this.tableId = tableId;
         this.employeeId = employeeId;
         this.foodOrders = foodOrders;
         this.paymentReceived = paymentReceived;
+        this.total = total;
     }
 
     public Table(int tableId) {
         this.tableId = tableId;
+        this.foodOrders = new ArrayList<>();
     }
 
     public String getObjectId() {
         return objectId;
     }
 
+    public void setObjectId(String objectId) {
+        this.objectId = objectId;
+    }
+
     public int getTableId() {
         return tableId;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public List<FoodOrder> getFoodOrders() {
-        return foodOrders;
-    }
-
-    public boolean isPaymentReceived() {
-        return paymentReceived;
     }
 
     public void setTableId(int tableId) {
         this.tableId = tableId;
     }
 
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
     public void setEmployeeId(int employeeId) {
         this.employeeId = employeeId;
     }
 
-    public void setFoodOrders(List<FoodOrder> foodOrders) {
+    public List<FoodOrderTable> getFoodOrders() {
+        return foodOrders;
+    }
+
+    public void setFoodOrders(List<FoodOrderTable> foodOrders) {
         this.foodOrders = foodOrders;
+    }
+
+    public boolean isPaymentReceived() {
+        return paymentReceived;
     }
 
     public void setPaymentReceived(boolean paymentReceived) {
         this.paymentReceived = paymentReceived;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public void addFoodOrderTable(FoodOrderTable foodOrderTable)
+    {
+        this.foodOrders.add(foodOrderTable);
+        this.total += foodOrderTable.getCount() *foodOrderTable.getFood().getPrice();          //updates the price
     }
 
     @Override
