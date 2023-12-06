@@ -79,6 +79,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
+    public boolean hasNull()
+    {
+        return this.firstName == null || this.lastName == null || this.password == null;
+    }
+
     @Override
     public String toString() {
         return "Employee{" +

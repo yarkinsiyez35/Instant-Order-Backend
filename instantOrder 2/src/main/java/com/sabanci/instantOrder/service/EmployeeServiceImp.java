@@ -6,8 +6,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Array;
-import java.sql.DataTruncation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,6 +77,10 @@ public class EmployeeServiceImp implements EmployeeService{
     public Employee addEmployee(Employee employee)
     {   //adds Employee if it has a unique employeeId, throws exception otherwise
 
+        if(employee.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Employee with ID: " + employee.getEmployeeId() + " has null values!");
+        }
         if(employeeRepository.existsEmployeeByEmployeeId(employee.getEmployeeId()))         //protection against inserting an employee with same employeeId
         {
             throw new RuntimeException("Employee with ID: "+ employee.getEmployeeId() + " already exists!");
@@ -87,28 +89,12 @@ public class EmployeeServiceImp implements EmployeeService{
     }
 
     @Override
-    public List<Employee> addEmployees(List<Employee> employees)
-    {   //adds each Employee if it has a unique employeeId, throws exception otherwise and does not add any Employee
-
-        List<Employee> addedEmployees = new ArrayList<>();
-        try
-        {
-            for (Employee toBeAddedEmployee : employees)            //for each employee in the list
-            {
-                Employee addedEmployee = addEmployee(toBeAddedEmployee);                //tries to add
-                addedEmployees.add(addedEmployee);
-            }
-        }
-        catch(RuntimeException e)                                                   //any exception will be caught
-        {
-            throw new RuntimeException("Cannot add the employee! " + e.getMessage());
-        }
-        return addedEmployees;                                                      //returns the list
-    }
-
-    @Override
     public Employee updateEmployee(Employee employee)
     {   //updates Employee with existing objectId, throws exception otherwise
+        if(employee.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Employee with ID: " + employee.getEmployeeId() + " has null values!");
+        }
         if(employeeRepository.existsEmployeeByObjectId(employee.getObjectId()))
         {
             return employeeRepository.save(employee);

@@ -47,7 +47,9 @@ public class CategoryController
     {
         try
         {
+            //find the category
             Category searchedCategory = categoryService.findCategoryByName(categoryName);
+            //return the category
             return ResponseEntity.ok(searchedCategory);
         }
         catch(RuntimeException e)
@@ -94,11 +96,12 @@ public class CategoryController
             Category addedCategory = categoryService.addCategoryByName(categoryName);
             //adds Food to the category
             addedCategory = categoryService.addFoodsToCategory(addedCategory,foods);
+            //return the Category
             return ResponseEntity.ok(addedCategory);
         }
         catch(RuntimeException e)
         {
-            return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return  ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
         }
     }
 
@@ -109,10 +112,11 @@ public class CategoryController
         {
             //find the Category
             Category categorytoUpdate = categoryService.findCategoryByName(categoryName);
-            //add Foods to the category
+            //add Foods to the Category
             categorytoUpdate = categoryService.addFoodsToCategory(categorytoUpdate,foods);
-            //update category
+            //update the Category
             Category updatedCategory = categoryService.updateCategory(categorytoUpdate);
+            //return the Category
             return ResponseEntity.ok(updatedCategory);
         }
         catch (RuntimeException e)
@@ -126,7 +130,9 @@ public class CategoryController
     {
         try
         {
+            //find the Category
             Category categoryToDelete = categoryService.findCategoryByName(categoryName);
+            //delete the category
             Category deletedCategory = categoryService.deleteCategory(categoryToDelete);
             return ResponseEntity.ok(deletedCategory);
         }
@@ -135,14 +141,4 @@ public class CategoryController
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-
-
-    //Post and Put functionality will be added after implementing adding Food to foodRepository in categoryService
-
-
-
-
-
-
 }
