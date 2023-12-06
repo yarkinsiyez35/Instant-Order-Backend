@@ -1,15 +1,11 @@
 package com.sabanci.instantOrder.model;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Document
 public class FoodOrderTable {
-    @Id
-    private String objectId;
-
     @Field("food")
     @DBRef
     private Food food;
@@ -24,14 +20,6 @@ public class FoodOrderTable {
         this.food = food;
         this.count = count;
         this.tableId = tableId;
-    }
-
-    public String getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(String objectId) {
-        this.objectId = objectId;
     }
 
     public Food getFood() {

@@ -19,7 +19,6 @@ public class Table {
     @Field("employeeId")
     private int employeeId;
     @Field("foodOrders")
-    @DBRef
     private List<FoodOrderTable> foodOrders;
     @Field("paid")
     private boolean paymentReceived;
@@ -94,6 +93,11 @@ public class Table {
     {
         this.foodOrders.add(foodOrderTable);
         this.total += foodOrderTable.getCount() *foodOrderTable.getFood().getPrice();          //updates the price
+    }
+
+    public boolean hasNull()
+    {
+        return this.tableId == 0 || this.total == 0 || this.foodOrders.isEmpty();
     }
 
     @Override

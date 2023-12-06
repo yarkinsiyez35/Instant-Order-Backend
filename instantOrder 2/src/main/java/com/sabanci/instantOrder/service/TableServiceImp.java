@@ -2,7 +2,6 @@ package com.sabanci.instantOrder.service;
 
 import com.sabanci.instantOrder.model.FoodOrderTable;
 import com.sabanci.instantOrder.model.Table;
-import com.sabanci.instantOrder.repo.FoodOrderTableRepository;
 import com.sabanci.instantOrder.repo.TableRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,11 @@ import java.util.Optional;
 public class TableServiceImp implements TableService{
 
     TableRepository tableRepository;
-    FoodOrderTableRepository foodOrderTableRepository;
 
     @Autowired
-    TableServiceImp(TableRepository tableRepository1, FoodOrderTableRepository foodOrderTableRepository1)
+    TableServiceImp(TableRepository tableRepository1)
     {
         this.tableRepository = tableRepository1;
-        this.foodOrderTableRepository = foodOrderTableRepository1;
     }
 
     @PostConstruct
@@ -138,11 +135,8 @@ public class TableServiceImp implements TableService{
         //this method resets every value of Table except tableId to default
         //get FoodOrderTable list
         List<FoodOrderTable> foodOrderTableList = table.getFoodOrders();
-        //remove each FoodOrderTable from database
-        foodOrderTableRepository.deleteAll(foodOrderTableList);
         //remove each FoodOrderTable from the list
         foodOrderTableList.clear();
-
         //set EmployeeId to 0
         table.setEmployeeId(0);
         //set List<FoodOrders> to empty List
@@ -151,7 +145,6 @@ public class TableServiceImp implements TableService{
         table.setTotal(0);
         //set paymentReceived to false
         table.setPaymentReceived(false);
-
         //update and return the table
         return tableRepository.save(table);
     }

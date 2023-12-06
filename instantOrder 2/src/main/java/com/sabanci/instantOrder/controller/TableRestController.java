@@ -4,7 +4,6 @@ package com.sabanci.instantOrder.controller;
 
 import com.sabanci.instantOrder.model.*;
 import com.sabanci.instantOrder.service.CategoryService;
-import com.sabanci.instantOrder.service.FoodOrderTableService;
 import com.sabanci.instantOrder.service.TableService;
 
 import java.util.List;
@@ -15,20 +14,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-
 @RestController
 @RequestMapping("/instantOrder")
 public class TableRestController {
 
     TableService tableService;
     CategoryService categoryService;
-    FoodOrderTableService foodOrderTableService;
 
     @Autowired
-    TableRestController(TableService tableService, CategoryService categoryService1, FoodOrderTableService foodOrderTableService1){
+    TableRestController(TableService tableService, CategoryService categoryService1){
         this.tableService = tableService;
         this.categoryService = categoryService1;
-        this.foodOrderTableService = foodOrderTableService1;
     }
 
 
@@ -43,7 +39,9 @@ public class TableRestController {
     {
         try
         {
+            //finds the Table
             Table searchedTable = tableService.findTableByTableId(tableId);
+            //returns the Table
             return ResponseEntity.status(HttpStatus.OK).body(searchedTable);
         }
         catch (RuntimeException e)
@@ -52,12 +50,16 @@ public class TableRestController {
         }
     }
 
-    @PostMapping("/tables/save")
-    public ResponseEntity<Object> addTable(@RequestBody Table table)
+    @PostMapping("/tables/{tableId}")
+    public ResponseEntity<Object> addTable(@RequestBody Table table, @PathVariable int tableId)
     {
         try
         {
+            //prevents from updating a Table with nonexistent tableId
+            table.setTableId(tableId);
+            //adds the Table
             Table searchedTable = tableService.addTable(table);
+            //returns the Table
             return ResponseEntity.status(HttpStatus.OK).body(searchedTable);
         }
         catch (RuntimeException e)
@@ -66,27 +68,39 @@ public class TableRestController {
         }
     }
 
-    @PutMapping("/tables/save")
-    public ResponseEntity<Object> updateTable(@RequestBody Table table)
+
+    //fix this to only get a boolean from body and clear the table if that boolean is true
+    @PutMapping("/tables/{tableId}")
+    public ResponseEntity<Object> updateTable(@RequestBody TableUpdate updateMessage , @PathVariable int tableId)
     {
         try
         {
-            Table searchedTable = tableService.updateTable(table);
-            return ResponseEntity.status(HttpStatus.OK).body(searchedTable);
+            //finds the searched Table
+            Table toBeUpdatedTable = tableService.findTableByTableId(tableId);
+            if(updateMessage.isPaid())    //if bill is paid
+            {
+                toBeUpdatedTable = tableService.clearTable(toBeUpdatedTable); //clears the Table
+            }
+            Table updateTable = tableService.updateTable(toBeUpdatedTable); //updates the Table
+            //returns the Table
+            return ResponseEntity.status(HttpStatus.OK).body(updateTable);
         }
-
         catch (RuntimeException e)
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @DeleteMapping("/tables/delete")
-    public ResponseEntity<Object> deleteTable(@RequestBody Table table)
+    @DeleteMapping("/tables/{tableId}")
+    public ResponseEntity<Object> deleteTable(@PathVariable int tableId)
     {
         try
         {
-            Table deletedTable = tableService.deleteTable(table);
+            //finds the searched Table
+            Table toBeDeletedTable = tableService.findTableByTableId(tableId);
+            //deletes the Table
+            Table deletedTable = tableService.deleteTable(toBeDeletedTable);
+            //return the Table
             return ResponseEntity.status(HttpStatus.OK).body(deletedTable);
         }
         catch(RuntimeException e)
@@ -95,13 +109,12 @@ public class TableRestController {
         }
     }
 
-
-
     @GetMapping("/tables/{tableId}/menu/categories")
     public List<Category> getCategories(@PathVariable int tableId)
     {
         try
         {
+            //finds the searched Table
             Table searchedTable = tableService.findTableByTableId(tableId);
             return categoryService.getCategories();
         }
@@ -116,9 +129,9 @@ public class TableRestController {
     {
         try
         {
-            //find table
+            //find Table
             Table searchedTable = tableService.findTableByTableId(tableId);
-            //find category
+            //find Category
             Category searchedCategory = categoryService.findCategoryByName(categoryName);
             return ResponseEntity.ok(searchedCategory);
         }
@@ -128,16 +141,14 @@ public class TableRestController {
         }
     }
 
-
-    //this method can have Food.objectId instead of Food.name??
     @GetMapping("/tables/{tableId}/menu/categories/{categoryName}/{foodName}")
     public ResponseEntity<Object> getFood(@PathVariable int tableId, @PathVariable String categoryName, @PathVariable String foodName)
     {
         try
         {
-            //find table
+            //find Table
             Table searchedTable = tableService.findTableByTableId(tableId);
-            //find category
+            //find Category
             Category searchedCategory = categoryService.findCategoryByName(categoryName);
             //find Food
             Food searchedFood = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
@@ -149,11 +160,9 @@ public class TableRestController {
         }
     }
 
-
-
     //Post method will create a FoodOrderTable, and FoodOrder and send it to the respective databases
-    @PostMapping("/tables/{tableId}/menu/categories/{categoryName}/{foodObjectId}")
-    public ResponseEntity<Object> createOrder(@PathVariable int tableId, @PathVariable String categoryName, @PathVariable String foodObjectId, @RequestBody NoteAndCount noteAndCount)
+    @PostMapping("/tables/{tableId}/menu/categories/{categoryName}/{foodName}")
+    public ResponseEntity<Object> createOrder(@PathVariable int tableId, @PathVariable String categoryName, @PathVariable String foodName, @RequestBody NoteAndCount noteAndCount)
     {
         try
         {
@@ -162,32 +171,22 @@ public class TableRestController {
             //find category
             Category searchedCategory = categoryService.findCategoryByName(categoryName);
             //find Food
-            Food searchedFood = categoryService.findFoodByCategoryAndFoodObjectId(searchedCategory,foodObjectId);
-
+            Food searchedFood = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
             //create FoodOrderTable
             FoodOrderTable foodOrderTable = new FoodOrderTable(searchedFood, noteAndCount.getCount(), searchedTable.getTableId());
-            //save foodOrderTable
-            foodOrderTableService.addFoodOrderTable(foodOrderTable);
             //create FoodOrder
             FoodOrder foodOrder = new FoodOrder(searchedFood, searchedTable.getTableId(), noteAndCount.getCount(), noteAndCount.getNote(), false);
             //add FoodOrderTable to Table
             searchedTable.addFoodOrderTable(foodOrderTable);
             //update Table
             searchedTable = tableService.updateTable(searchedTable);
-
             //foodOrderService.addFoodOrder(foodOrder);
-            return ResponseEntity.ok(foodOrderTable);
+            return ResponseEntity.ok(searchedTable);
         }
         catch(RuntimeException e)
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-
-
-    //how to delete?
-
-
-
 }
 
