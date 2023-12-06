@@ -10,15 +10,7 @@ public interface CategoryService {
     List<Category> getCategories();
     Category findCategoryByObjectId(String objectId);
     Category findCategoryByName(String name);
-    List<Food> findFoodsByCategoryName(String name);
-    List<Food> findFoodsByCategoryObjectId(String objectId);
-    Category addFoodToCategoryByObjectId(String objectId, Food food);
-    Category addFoodToCategory(Category category, Food food);
-    Category addFoodsToCategory(Category category, List<Food> foods);
-    Category addFoodToCategoryByName(String name, Food food);
     Food findFoodByCategoryAndFoodName(Category category, String foodName);
-    Food findFoodByCategoryAndFoodObjectId(Category category, String foodObjectId);
-
     Category addCategory(Category category);
     Category updateCategory(Category category);
     Category deleteCategory(Category category);

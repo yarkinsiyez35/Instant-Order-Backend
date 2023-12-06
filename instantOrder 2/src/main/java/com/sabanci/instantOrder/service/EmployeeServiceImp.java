@@ -60,20 +60,6 @@ public class EmployeeServiceImp implements EmployeeService{
     }
 
     @Override
-    public Employee findEmployeeByObjectId(String objectId)
-    {       //returns Employee if it exists, throws exception otherwise
-        Optional<Employee> searchedEmployee = employeeRepository.findById(objectId);
-        if(searchedEmployee.isPresent())
-        {
-           return searchedEmployee.get();
-        }
-        else
-        {
-            throw new RuntimeException("Employee with objectId: " + objectId + " does not exist!");
-        }
-    }
-
-    @Override
     public Employee addEmployee(Employee employee)
     {   //adds Employee if it has a unique employeeId, throws exception otherwise
 

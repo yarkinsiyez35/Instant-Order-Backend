@@ -73,20 +73,6 @@ public class FoodServiceImp implements FoodService{
     }
 
     @Override
-    public Food findFoodByObjectId(String objectId)
-    {   //returns Food if it exists, throws exception otherwise
-        Optional<Food> searchedFood = foodRepository.findFoodByObjectId(objectId);
-        if (searchedFood.isPresent())
-        {
-            return searchedFood.get();
-        }
-        else
-        {
-            throw new RuntimeException("Food with objectId: "+ objectId + " does not exist!");
-        }
-    }
-
-    @Override
     public Food findFoodByName(String name)
     { //returns Food if it exists, throws exception otherwise
         Optional<Food> searchedFood = foodRepository.findFoodByName(name);

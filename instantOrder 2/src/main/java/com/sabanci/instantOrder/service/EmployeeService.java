@@ -10,10 +10,9 @@ public interface EmployeeService
 
     List<Employee> getEmployees();                                      //returns every employee
     Employee findEmployeeByEmployeeId(int employeeId);                  //finds Employee by employeeId
-    Employee findEmployeeByObjectId(String objectId);                   //finds Employee by objectId
     Employee addEmployee(Employee employee);                            //adds one Employee
     Employee updateEmployee(Employee employee);                         //updates an existing Employee
     Employee deleteEmployee(Employee employee);                         //deletes an Employee
 
-    boolean existsEmployeeByEmployeeIdAndPassword(int employeeId, String password); //used in login 
+    boolean existsEmployeeByEmployeeIdAndPassword(int employeeId, String password); //used in login
 }

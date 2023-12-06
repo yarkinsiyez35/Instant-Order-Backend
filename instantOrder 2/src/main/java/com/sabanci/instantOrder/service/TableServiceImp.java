@@ -57,20 +57,6 @@ public class TableServiceImp implements TableService{
     }
 
     @Override
-    public Table findTableByObjectId(String objectId)
-    {
-        Optional<Table> searchedTable = tableRepository.findById(objectId);
-        if(searchedTable.isPresent())
-        {
-            return searchedTable.get();
-        }
-        else
-        {
-            throw new RuntimeException("Table with objectId: " + objectId + " does not exist!");
-        }
-    }
-
-    @Override
     public Table addTable(Table table)
     {
 
@@ -79,26 +65,6 @@ public class TableServiceImp implements TableService{
             throw new RuntimeException("Table with Id: "+ table.getTableId() + " already exists!");
         }
         return tableRepository.insert(table);
-    }
-
-    @Override
-    public List<Table> addTables(List<Table> tables)
-    {
-
-        List<Table> addedEmployees = new ArrayList<>();
-        try
-        {
-            for (Table toBeAddedTable : tables)
-            {
-                Table addedTable = addTable(toBeAddedTable);
-                addedEmployees.add(addedTable);
-            }
-        }
-        catch(RuntimeException e)
-        {
-            throw new RuntimeException("Cannot add the table! " + e.getMessage());
-        }
-        return addedEmployees;
     }
 
     @Override
