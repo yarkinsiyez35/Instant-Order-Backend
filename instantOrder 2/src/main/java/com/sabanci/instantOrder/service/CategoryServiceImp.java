@@ -273,7 +273,6 @@ public class CategoryServiceImp implements CategoryService{
             {
                 throw new RuntimeException("Food with name: " + foodName + " does not exist");
             }
-
         }
         catch (RuntimeException e)
         {
@@ -308,9 +307,15 @@ public class CategoryServiceImp implements CategoryService{
         }
     }
 
+
+
     @Override
     public Category addCategory(Category category)
     {   //adds and returns Category if it has unique name, throws exception otherwise
+        if(category.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Category with name: " + category.getName() + " has null values!");
+        }
         if(categoryRepository.existsCategoriesByName(category.getName()))
         {
             throw new RuntimeException("Category with name: " + category.getName() + " already exists!");
@@ -322,22 +327,12 @@ public class CategoryServiceImp implements CategoryService{
     }
 
     @Override
-    public Category addCategoryByName(String categoryName)
-    {   //adds and returns Category if it has a unique name, throws exception otherwise
-        if(categoryRepository.existsCategoriesByName(categoryName))
-        {
-            throw new RuntimeException("Category with name: "+ categoryName + " already exists!");
-        }
-        else
-        {
-            Category addedCategory = new Category(categoryName, new ArrayList<>());
-            return  categoryRepository.save(addedCategory);
-        }
-    }
-
-    @Override
     public Category updateCategory(Category category)
     {   //updates and returns Category if it exists, throws exception otherwise
+        if(category.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Category with name: " + category.getName() + " has null values!");
+        }
         if (categoryRepository.existsCategoriesByObjectId(category.getObjectId()))
         {
             return categoryRepository.save(category);

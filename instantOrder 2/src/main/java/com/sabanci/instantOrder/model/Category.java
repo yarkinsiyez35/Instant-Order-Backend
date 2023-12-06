@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +30,7 @@ public class Category {
     public Category(String name)
     {
         this.name = name;
+        this.foods = new ArrayList<>();
     }
 
     public String getObjectId() {
@@ -58,6 +60,11 @@ public class Category {
     public boolean foodExists(Food food)
     {
         return this.foods.contains(food);
+    }
+
+    public boolean hasNull()
+    {
+        return this.foods.isEmpty() || this.name == null;
     }
 
     @Override

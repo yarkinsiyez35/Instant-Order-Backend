@@ -148,4 +148,9 @@ public class FoodServiceImp implements FoodService{
             throw new RuntimeException("Food with objectId: "+ food.getObjectId() + " does not exist!");
         }
     }
+
+    @Override
+    public boolean existsFoodByName(String name) {
+        return foodRepository.existsFoodByName(name);
+    }
 }

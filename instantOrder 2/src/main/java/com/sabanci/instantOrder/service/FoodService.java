@@ -12,5 +12,6 @@ public interface FoodService {
     Food updateFood(Food food);
     Food deleteFood(Food food);
 
+    boolean existsFoodByName(String name);
 
 }

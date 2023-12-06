@@ -19,11 +19,12 @@ import java.util.Objects;
 public class CategoryController
 {
     //this controller is responsible for
-    //@Get List<Categories> -->returns List<Category>
-    //@Get Category -->returns the requested Category
-    //@Post Category -->creates a new Category with given List<Food>
-    //@Put Category  -->updates an existing Category with given List<Food>
-    //@Delete Category  -->deletes an existing Category and its List<Food>
+    //@Get List<Categories> --> returns List<Category>
+    //@Get Category --> returns the requested Category
+    //@Post Category --> creates a new Category with given List<Food>
+    //@Put Category  --> updates an existing Category with given List<Food>
+    //@Delete Category  --> deletes an existing Category and its List<Food>
+    //@Delete Food --> deletes an existing Food in that Category, if updated Category has no remaining Food, Category will be deleted
 
     CategoryService categoryService;
     FoodService foodService;
@@ -34,7 +35,6 @@ public class CategoryController
         this.categoryService = categoryService1;
         this.foodService = foodService1;
     }
-
 
     @GetMapping("/categories")
     public List<Category> getCategories()
@@ -87,33 +87,51 @@ public class CategoryController
         }
     }
 
-    @PostMapping("/categories/{categoryName}/save")
-    public ResponseEntity<Object> addCategory(@PathVariable String categoryName, @RequestBody List<Food> foods)
+    @PostMapping("/categories/{categoryName}")
+    public ResponseEntity<Object> addCategory(@PathVariable String categoryName, @RequestBody Food food)
     {
         try
         {
-            //creates a Category with empty List<Food>
-            Category addedCategory = categoryService.addCategoryByName(categoryName);
-            //adds Food to the category
-            addedCategory = categoryService.addFoodsToCategory(addedCategory,foods);
-            //return the Category
+            //creates the category Object
+            Category newCategory = new Category(categoryName);
+            //check if food exists
+            if(foodService.existsFoodByName(food.getName()))    //Food exists
+            {
+                Food searchedFood = foodService.findFoodByName(food.getName()); //find the searched Food
+                newCategory.addFood(searchedFood);  //add Food to Category
+            }
+            else    //Food does not exist in the database
+            {
+                Food addedFood = foodService.addFood(food); //add Food to repository
+                newCategory.addFood(addedFood); //add Food to Category
+            }
+            Category addedCategory = categoryService.addCategory(newCategory);
             return ResponseEntity.ok(addedCategory);
         }
         catch(RuntimeException e)
         {
-            return  ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
         }
     }
 
-    @PutMapping("/categories/{categoryName}/save")
-    public ResponseEntity<Object> updateCategory(@PathVariable String categoryName, @RequestBody List<Food> foods)
+    @PutMapping("/categories/{categoryName}")
+    public ResponseEntity<Object> updateCategory(@PathVariable String categoryName, @RequestBody Food food)
     {
         try
         {
             //find the Category
             Category categorytoUpdate = categoryService.findCategoryByName(categoryName);
-            //add Foods to the Category
-            categorytoUpdate = categoryService.addFoodsToCategory(categorytoUpdate,foods);
+            //check if Food exists
+            if(foodService.existsFoodByName(food.getName())) //Food exists in the repository
+            {
+                Food searchedFood = foodService.findFoodByName(food.getName());
+                categorytoUpdate.addFood(searchedFood);
+            }
+            else //Food does not exist in the repository
+            {
+                Food addedFood = foodService.addFood(food); //add Food to repository
+                categorytoUpdate.addFood(addedFood); //add Food to Category
+            }
             //update the Category
             Category updatedCategory = categoryService.updateCategory(categorytoUpdate);
             //return the Category
@@ -125,20 +143,45 @@ public class CategoryController
         }
     }
 
-    @DeleteMapping("/categories/{categoryName}/delete")
+    @DeleteMapping("/categories/{categoryName}")
     public ResponseEntity<Object> deleteCategory(@PathVariable String categoryName)
     {
         try
         {
             //find the Category
             Category categoryToDelete = categoryService.findCategoryByName(categoryName);
-            //delete the category
+            //delete the Category
             Category deletedCategory = categoryService.deleteCategory(categoryToDelete);
             return ResponseEntity.ok(deletedCategory);
         }
         catch (RuntimeException e)
         {
             return  ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/categories/{categoryName}/{foodName}")
+    public ResponseEntity<Object> deleteFoodFromCategory(@PathVariable String categoryName, @PathVariable String foodName)
+    {
+        try
+        {
+            //find the Category
+            Category searchedCategory = categoryService.findCategoryByName(categoryName);
+            //find the Food
+            Food foodToDelete = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
+            //delete the food
+            Food deletedFood = foodService.deleteFood(foodToDelete);
+            //return the category
+            Category updatedCategory = categoryService.findCategoryByObjectId(searchedCategory.getObjectId());
+            if(updatedCategory.hasNull()) //if category becomes empty
+            {
+                updatedCategory = categoryService.deleteCategory(updatedCategory); //deletes the category
+            }
+            return ResponseEntity.ok(updatedCategory);
+        }
+        catch(RuntimeException e)
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }
