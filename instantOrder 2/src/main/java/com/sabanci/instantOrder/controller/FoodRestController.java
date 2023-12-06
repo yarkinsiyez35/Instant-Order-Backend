@@ -15,9 +15,10 @@ import java.util.List;
 @RequestMapping("/instantOrder")
 public class FoodRestController {
     //this controller is responsible for:
-    //@Get List<Food>
-    //@Get Food
-    //@Put Food
+    //@Get List<Food> --> returns List<Food>
+    //@Get Food --> returns Food
+    //@Put Food --> updates Food
+    //@Delete and @Post methods for Food are implemented in CategoryController
 
 
     FoodService foodService;
@@ -33,12 +34,12 @@ public class FoodRestController {
         return foodService.getFoods();
     }
 
-    @GetMapping("/foods/{objectId}")
-    public ResponseEntity<Object> getFood(@PathVariable String objectId)
+    @GetMapping("/foods/{name}")
+    public ResponseEntity<Object> getFood(@PathVariable String name)
     {
         try
         {
-            Food searchedFood = foodService.findFoodByObjectId(objectId);
+            Food searchedFood = foodService.findFoodByName(name);
             return ResponseEntity.status(HttpStatus.OK).body(searchedFood);
         }
         catch (RuntimeException e)
@@ -46,17 +47,24 @@ public class FoodRestController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
-    @PutMapping("/foods/save")
-    public ResponseEntity<Object> updateFood(@RequestBody Food food)
+    @PutMapping("/foods/{name}")
+    public ResponseEntity<Object> updateFood(@RequestBody Food food, @PathVariable String name)
     {
         try
         {
-            Food searchedFood = foodService.updateFood(food);
-            return ResponseEntity.status(HttpStatus.OK).body(searchedFood);
+            //find the Food
+            Food searchedFood = foodService.findFoodByName(name);
+            //this assignment prevents from changing the objectId
+            searchedFood.setName(food.getName());
+            searchedFood.setPrice(food.getPrice());
+            //update the Food
+            Food updatedFood = foodService.updateFood(searchedFood);
+            //return the Food
+            return ResponseEntity.status(HttpStatus.OK).body(updatedFood);
         }
         catch (RuntimeException e)
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
         }
     }
 }

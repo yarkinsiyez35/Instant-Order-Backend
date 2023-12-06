@@ -27,7 +27,7 @@ public class FoodServiceImp implements FoodService{
     {   //adds Foods if database is empty
         if(foodRepository.count() == 0)
         {
-            //Foods in Fastfood category
+            //add Foods in Fastfood category
             Food food1 = new Food("Hamburger", 180);
             Food food2 = new Food("Cheeseburger", 200);
             Food food3 = new Food("Hotdog", 140);
@@ -103,6 +103,10 @@ public class FoodServiceImp implements FoodService{
     @Override
     public Food addFood(Food food)
     {   //adds Food if it has a unique name, throws exception otherwise
+        if(food.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Food with name: " + food.getName() + " has null values!");
+        }
         if(foodRepository.existsFoodByName(food.getName()))
         {
             throw new RuntimeException("Food with name: " + food.getName() + " already exists!");
@@ -116,13 +120,17 @@ public class FoodServiceImp implements FoodService{
     @Override
     public Food updateFood(Food food)
     {   //updates Food with existing objectId, throws exception otherwise
-        if(foodRepository.existsFoodByObjectId(food.getObjectId()))
+        if(food.hasNull()) //protection against empty bodies
+        {
+            throw new RuntimeException("Food with name: " + food.getName() + " has null values!");
+        }
+        if(foodRepository.existsFoodByName(food.getName()))
         {
             return foodRepository.save(food);
         }
         else
         {
-            throw new RuntimeException("Food with objectId: " + food.getObjectId() + " does not exist!");
+            throw new RuntimeException("Food with name: " + food.getName() + " does not exist!");
         }
     }
 

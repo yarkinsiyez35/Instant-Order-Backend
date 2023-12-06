@@ -57,6 +57,11 @@ public class Food {
         return Objects.hash(objectId, name, price);
     }
 
+    public boolean hasNull()
+    {
+        return this.price == 0 || this.name == null;
+    }
+
     @Override
     public String toString() {
         return "Food{" +
