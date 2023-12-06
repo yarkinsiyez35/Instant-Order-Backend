@@ -43,7 +43,9 @@ public class EmployeeRestController {
     {
         try
         {
+            //find the Employee
             Employee searchedEmployee = employeeService.findEmployeeByEmployeeId(employeeId);
+            //return the Employee
             return ResponseEntity.ok(searchedEmployee);
         }
         catch(RuntimeException e)
@@ -101,6 +103,7 @@ public class EmployeeRestController {
             Employee toBeDeletedEmployee = employeeService.findEmployeeByEmployeeId(employeeId);
             //delete the Employee
             Employee deletedEmployee = employeeService.deleteEmployee(toBeDeletedEmployee);
+            //return the Employee
             return ResponseEntity.ok(deletedEmployee);
         }
         catch(RuntimeException e)

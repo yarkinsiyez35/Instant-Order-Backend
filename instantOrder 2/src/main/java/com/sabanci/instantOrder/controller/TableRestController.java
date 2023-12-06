@@ -68,16 +68,14 @@ public class TableRestController {
         }
     }
 
-
-    //fix this to only get a boolean from body and clear the table if that boolean is true
     @PutMapping("/tables/{tableId}")
-    public ResponseEntity<Object> updateTable(@RequestBody TableUpdate updateMessage , @PathVariable int tableId)
+    public ResponseEntity<Object> updateTable(@RequestBody UpdateMessage updateMessage , @PathVariable int tableId)
     {
         try
         {
             //finds the searched Table
             Table toBeUpdatedTable = tableService.findTableByTableId(tableId);
-            if(updateMessage.isPaid())    //if bill is paid
+            if(updateMessage.isUpdate())    //if bill is paid
             {
                 toBeUpdatedTable = tableService.clearTable(toBeUpdatedTable); //clears the Table
             }
@@ -116,6 +114,7 @@ public class TableRestController {
         {
             //finds the searched Table
             Table searchedTable = tableService.findTableByTableId(tableId);
+            //returns every Category
             return categoryService.getCategories();
         }
         catch (RuntimeException e)
@@ -189,4 +188,3 @@ public class TableRestController {
         }
     }
 }
-

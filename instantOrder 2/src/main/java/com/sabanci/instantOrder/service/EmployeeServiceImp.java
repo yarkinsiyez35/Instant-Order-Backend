@@ -119,4 +119,9 @@ public class EmployeeServiceImp implements EmployeeService{
             throw new RuntimeException(("Employee with objectId: " + employee.getObjectId() + " cannot be deleted!"));
         }
     }
+
+    @Override
+    public boolean existsEmployeeByEmployeeIdAndPassword(int employeeId, String password) {
+        return employeeRepository.existsEmployeeByEmployeeIdAndPassword(employeeId,password);
+    }
 }

@@ -39,7 +39,9 @@ public class FoodRestController {
     {
         try
         {
+            //find the Food
             Food searchedFood = foodService.findFoodByName(name);
+            //return the Food
             return ResponseEntity.status(HttpStatus.OK).body(searchedFood);
         }
         catch (RuntimeException e)

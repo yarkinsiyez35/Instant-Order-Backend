@@ -90,6 +90,7 @@ public class CategoryController
     @PostMapping("/categories/{categoryName}")
     public ResponseEntity<Object> addCategory(@PathVariable String categoryName, @RequestBody Food food)
     {
+        boolean foodExists = true;
         try
         {
             //creates the category Object
@@ -104,12 +105,17 @@ public class CategoryController
             {
                 Food addedFood = foodService.addFood(food); //add Food to repository
                 newCategory.addFood(addedFood); //add Food to Category
+                foodExists = false;
             }
             Category addedCategory = categoryService.addCategory(newCategory);
             return ResponseEntity.ok(addedCategory);
         }
         catch(RuntimeException e)
         {
+            if(!foodExists && foodService.existsFoodByName(food.getName())) //prevention against adding a Food to database and having an error afterward
+            {
+                Food deletedFood = foodService.deleteFood(foodService.findFoodByName(food.getName()));  //deletes the food
+            }
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(e.getMessage());
         }
     }
@@ -117,6 +123,7 @@ public class CategoryController
     @PutMapping("/categories/{categoryName}")
     public ResponseEntity<Object> updateCategory(@PathVariable String categoryName, @RequestBody Food food)
     {
+        boolean foodExists = true;
         try
         {
             //find the Category
@@ -131,6 +138,7 @@ public class CategoryController
             {
                 Food addedFood = foodService.addFood(food); //add Food to repository
                 categorytoUpdate.addFood(addedFood); //add Food to Category
+                foodExists = false;
             }
             //update the Category
             Category updatedCategory = categoryService.updateCategory(categorytoUpdate);
@@ -139,6 +147,10 @@ public class CategoryController
         }
         catch (RuntimeException e)
         {
+            if(!foodExists && foodService.existsFoodByName(food.getName())) //prevention against adding Food to database and having an error afterward
+            {
+                Food deletedFood = foodService.deleteFood(foodService.findFoodByName(food.getName()));  //deletes the food
+            }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -152,6 +164,7 @@ public class CategoryController
             Category categoryToDelete = categoryService.findCategoryByName(categoryName);
             //delete the Category
             Category deletedCategory = categoryService.deleteCategory(categoryToDelete);
+            //return the Category
             return ResponseEntity.ok(deletedCategory);
         }
         catch (RuntimeException e)
@@ -171,12 +184,13 @@ public class CategoryController
             Food foodToDelete = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
             //delete the food
             Food deletedFood = foodService.deleteFood(foodToDelete);
-            //return the category
+
             Category updatedCategory = categoryService.findCategoryByObjectId(searchedCategory.getObjectId());
             if(updatedCategory.hasNull()) //if category becomes empty
             {
                 updatedCategory = categoryService.deleteCategory(updatedCategory); //deletes the category
             }
+            //return the category
             return ResponseEntity.ok(updatedCategory);
         }
         catch(RuntimeException e)

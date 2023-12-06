@@ -14,4 +14,6 @@ public interface EmployeeService
     Employee addEmployee(Employee employee);                            //adds one Employee
     Employee updateEmployee(Employee employee);                         //updates an existing Employee
     Employee deleteEmployee(Employee employee);                         //deletes an Employee
+
+    boolean existsEmployeeByEmployeeIdAndPassword(int employeeId, String password); //used in login 
 }
