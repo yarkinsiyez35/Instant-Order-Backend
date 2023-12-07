@@ -18,8 +18,7 @@ public class FoodRestController {
     //@Get List<Food> --> returns List<Food>
     //@Get Food --> returns Food
     //@Put Food --> updates Food
-    //@Delete and @Post methods for Food are implemented in CategoryController
-
+    //@Delete and @Post methods for Food are implemented in CategoryRestController
 
     FoodService foodService;
     @Autowired

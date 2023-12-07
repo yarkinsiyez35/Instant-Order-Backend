@@ -4,8 +4,9 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+//this class is used to calculate the bill of the Table
 @Document
-public class FoodOrderTable {
+public class FoodTable {
     @Field("food")
     @DBRef
     private Food food;
@@ -16,7 +17,7 @@ public class FoodOrderTable {
     @Field("tableId")
     private int tableId;
 
-    public FoodOrderTable(Food food, int count, int tableId) {
+    public FoodTable(Food food, int count, int tableId) {
         this.food = food;
         this.count = count;
         this.tableId = tableId;

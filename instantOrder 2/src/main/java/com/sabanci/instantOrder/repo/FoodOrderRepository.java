@@ -11,11 +11,8 @@ import java.util.Optional;
 @Repository
 public interface FoodOrderRepository extends MongoRepository<FoodOrder, String> {
 
-    List<FoodOrder> findAllBy();
-    Optional<FoodOrder> findFoodOrderByObjectId(String s);
-    List<FoodOrder> findFoodOrderByCookingStatus(Boolean bool);
+
     List<FoodOrder> findFoodOrderByTableId(int i);
-    List<FoodOrder> findFoodOrderByFood(Food f);
 
     boolean existsFoodOrderByObjectId(String objectId);
 }

@@ -28,7 +28,8 @@ public class FoodOrderServiceImp implements FoodOrderService {
     }
 
     @Override
-    public List<FoodOrder> getFoodOrders() {
+    public List<FoodOrder> getFoodOrders()
+    {
         return foodOrderRepository.findAll();
     }
 
@@ -47,17 +48,8 @@ public class FoodOrderServiceImp implements FoodOrderService {
     }
 
     @Override
-    public List<FoodOrder> findFoodOrderByTableId(int tableId) {
-        List<FoodOrder> searchedFoodOrder = foodOrderRepository.findFoodOrderByTableId(tableId);
-        if (searchedFoodOrder.isEmpty()) {
-            throw new RuntimeException("Food Order with table: " + tableId + " does not exist!");
-        }
-        return searchedFoodOrder;
-    }
-
-    @Override
     public FoodOrder addFoodOrder(FoodOrder foodOrder)
-    { //adds food if it has a unique objectId
+    { //adds FoodOrder if it has a unique objectId
         if (foodOrder.getObjectId() != null && foodOrderRepository.existsById(foodOrder.getObjectId()))
         {
             throw new RuntimeException("Food Order with objectId: " + foodOrder.getObjectId() + " already exists!");
@@ -69,7 +61,7 @@ public class FoodOrderServiceImp implements FoodOrderService {
 
     @Override
     public FoodOrder updateFoodOrder(FoodOrder foodOrder)
-    {//updates Employee with existing objectId, throws exception otherwise
+    {//updates FoodOrder with existing objectId, throws exception otherwise
         if (foodOrder.hasNull()) //protection against empty bodies
         {
             throw new RuntimeException("Food Order with ID: " + foodOrder.getObjectId() + " has null values!");
@@ -83,13 +75,6 @@ public class FoodOrderServiceImp implements FoodOrderService {
             throw new RuntimeException("Food Order with objectID: " + foodOrder.getObjectId() + " cannot be updated!");
         }
     }
-
-    @Override
-    public boolean existsFoodOrderByObjectId(String objectId)
-    {
-        return foodOrderRepository.existsFoodOrderByObjectId(objectId);
-    }
-
 
     @Override
     public FoodOrder deleteFoodOrder(FoodOrder foodOrder)

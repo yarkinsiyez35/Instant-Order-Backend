@@ -1,5 +1,6 @@
 package com.sabanci.instantOrder.model;
 
+//this class is used in login page
 public class EmployeeLogin {
     private int employeeId;
     private String password;

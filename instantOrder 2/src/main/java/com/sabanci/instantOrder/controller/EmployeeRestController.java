@@ -2,28 +2,23 @@ package com.sabanci.instantOrder.controller;
 
 
 import com.sabanci.instantOrder.model.Employee;
-import com.sabanci.instantOrder.repo.EmployeeRepository;
 import com.sabanci.instantOrder.service.EmployeeService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/instantOrder")
 public class EmployeeRestController {
     //this controller is responsible for
-    //@Get List<Employee> -->returns List<Employee>
-    //@Get Employee -->returns the requested Employee
-    //@Post Employee -->creates a new Employee with given Employee
-    //@Put Employee  -->updates an existing Employee with given Employee
-    //@Delete Employee  -->deletes an existing Employee
+    //@Get List<Employee> --> returns List<Employee>
+    //@Get Employee --> returns the requested Employee
+    //@Post Employee --> creates a new Employee with given Employee
+    //@Put Employee  --> updates an existing Employee with given Employee
+    //@Delete Employee  --> deletes an existing Employee
 
     private EmployeeService employeeService;
     @Autowired

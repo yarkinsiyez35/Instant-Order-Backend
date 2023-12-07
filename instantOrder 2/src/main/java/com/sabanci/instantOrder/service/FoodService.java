@@ -10,7 +10,6 @@ public interface FoodService {
     Food addFood(Food food);
     Food updateFood(Food food);
     Food deleteFood(Food food);
-
     boolean existsFoodByName(String name);
 
 }

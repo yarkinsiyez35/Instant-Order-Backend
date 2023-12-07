@@ -7,30 +7,28 @@ import com.sabanci.instantOrder.service.CategoryService;
 import com.sabanci.instantOrder.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/instantOrder/menu")
-public class CategoryController
+public class CategoryRestController
 {
     //this controller is responsible for
-    //@Get List<Categories> --> returns List<Category>
-    //@Get Category --> returns the requested Category
-    //@Post Category --> creates a new Category with given List<Food>
-    //@Put Category  --> updates an existing Category with given List<Food>
-    //@Delete Category  --> deletes an existing Category and its List<Food>
-    //@Delete Food --> deletes an existing Food in that Category, if updated Category has no remaining Food, Category will be deleted
+    //@GET List<Categories> --> returns List<Category>
+    //@GET Category --> returns the requested Category
+    //@POST Category --> creates a new Category with given List<Food>
+    //@PUT Category  --> updates an existing Category with given List<Food>
+    //@DELETE Category  --> deletes an existing Category and its List<Food>
+    //@DELETE Food --> deletes an existing Food in that Category, if updated Category has no remaining Food, Category will be deleted
 
     CategoryService categoryService;
     FoodService foodService;
 
     @Autowired
-    CategoryController(CategoryService categoryService1, FoodService foodService1)
+    CategoryRestController(CategoryService categoryService1, FoodService foodService1)
     {
         this.categoryService = categoryService1;
         this.foodService = foodService1;
@@ -64,13 +62,11 @@ public class CategoryController
         try
         {
             //find Category
-            Category searchedCategory = categoryService.findCategoryByName(categoryName);       //this will throw an exception if categoryName does not exist
+            Category searchedCategory = categoryService.findCategoryByName(categoryName);
             //find Food
-            Food searchedFood = foodService.findFoodByName(foodName);                           //this will throw an exception if foodName does not exist
-
+            Food searchedFood = foodService.findFoodByName(foodName);
             //find Foods in the Category
             List<Food> foodsInCategory = searchedCategory.getFoods();
-
             //if that Food is in that category
             if (foodsInCategory.contains(searchedFood))
             {
@@ -184,7 +180,7 @@ public class CategoryController
             Food foodToDelete = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
             //delete the food
             Food deletedFood = foodService.deleteFood(foodToDelete);
-
+            //find the updated category
             Category updatedCategory = categoryService.findCategoryByObjectId(searchedCategory.getObjectId());
             if(updatedCategory.hasNull()) //if category becomes empty
             {

@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
+//this class is used to store Employee information
 @Document
 public class Employee {
 

@@ -1,5 +1,7 @@
 package com.sabanci.instantOrder.model;
 
+
+//this class is used to send update messages in PUT request
 public class UpdateMessage {
     private boolean update;
 

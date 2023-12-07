@@ -61,7 +61,6 @@ public class FoodServiceImp implements FoodService{
             , food13, food14, food15, food16, food17, food18, food19, food20));
             foodRepository.insert(foods);
         }
-
     }
 
 

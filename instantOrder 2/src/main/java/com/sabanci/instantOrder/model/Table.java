@@ -1,7 +1,6 @@
 package com.sabanci.instantOrder.model;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -15,20 +14,18 @@ public class Table {
     private String objectId;
     @Field("tableId")
     private int tableId;
-
     @Field("employeeId")
     private int employeeId;
     @Field("foodOrders")
-    private List<FoodOrderTable> foodOrders;
+    private List<FoodTable> foodOrders;
     @Field("paid")
     private boolean paymentReceived;
-
     @Field("total")
     private double total;
 
     public Table(){}
 
-    public Table(int tableId, int employeeId, List<FoodOrderTable> foodOrders, boolean paymentReceived, double total) {
+    public Table(int tableId, int employeeId, List<FoodTable> foodOrders, boolean paymentReceived, double total) {
         this.tableId = tableId;
         this.employeeId = employeeId;
         this.foodOrders = foodOrders;
@@ -65,11 +62,11 @@ public class Table {
         this.employeeId = employeeId;
     }
 
-    public List<FoodOrderTable> getFoodOrders() {
+    public List<FoodTable> getFoodOrders() {
         return foodOrders;
     }
 
-    public void setFoodOrders(List<FoodOrderTable> foodOrders) {
+    public void setFoodOrders(List<FoodTable> foodOrders) {
         this.foodOrders = foodOrders;
     }
 
@@ -89,10 +86,10 @@ public class Table {
         this.total = total;
     }
 
-    public void addFoodOrderTable(FoodOrderTable foodOrderTable)
+    public void addFoodOrderTable(FoodTable foodTable)
     {
-        this.foodOrders.add(foodOrderTable);
-        this.total += foodOrderTable.getCount() *foodOrderTable.getFood().getPrice();          //updates the price
+        this.foodOrders.add(foodTable);
+        this.total += foodTable.getCount() * foodTable.getFood().getPrice();          //updates the price
     }
 
     public boolean hasNull()

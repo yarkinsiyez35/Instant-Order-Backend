@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Objects;
 
+//this class is used to store Food information
 @Document
 public class Food {
 

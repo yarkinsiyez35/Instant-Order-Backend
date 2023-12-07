@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+//this class is used to store FoodOrder information that goes to chef
 @Document
 public class FoodOrder {
     @Id
@@ -79,7 +80,7 @@ public class FoodOrder {
 
     public boolean hasNull()
     {
-        return this.food.getName() == null || this.food.getPrice() == 0 || this.tableId == 0;
+        return this.food.hasNull() || this.tableId == 0;
     }
 
     @Override

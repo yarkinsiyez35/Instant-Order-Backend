@@ -1,9 +1,9 @@
 package com.sabanci.instantOrder.controller;
 
 
-import com.sabanci.instantOrder.model.FoodOrderServe;
+import com.sabanci.instantOrder.model.FoodServe;
 import com.sabanci.instantOrder.model.UpdateMessage;
-import com.sabanci.instantOrder.service.FoodOrderServeService;
+import com.sabanci.instantOrder.service.FoodServeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,29 +14,36 @@ import java.util.List;
 @RestController
 @RequestMapping("instantOrder/serve")
 public class ServeRestController {
-    FoodOrderServeService foodOrderServeService;
+    //this controller is responsible for
+    //@GET List<FoodServe> --> return List<FoodServe>
+    //@GET FoodServe --> return FoodServe
+    //@UPDATE FoodServe --> updated FoodServe is deleted from the repository
+    //@DELETE is not allowed since not served FoodServe cannot be deleted
+    //@POST is implemented in OrderRestController
+
+    FoodServeService foodServeService;
 
     @Autowired
-    ServeRestController(FoodOrderServeService foodOrderServeService1)
+    ServeRestController(FoodServeService foodServeService1)
     {
-        this.foodOrderServeService = foodOrderServeService1;
+        this.foodServeService = foodServeService1;
     }
 
     @GetMapping()
-    List<FoodOrderServe> getFoodOrderServes()
+    List<FoodServe> getFoodServes()
     {
-        return foodOrderServeService.findAllFoodOrderServe();
+        return foodServeService.findAllFoodServe();
     }
 
     @GetMapping("/{objectId}")
-    ResponseEntity<Object> getFoodOrderServe(@PathVariable String objectId)
+    ResponseEntity<Object> getFoodServe(@PathVariable String objectId)
     {
         try
         {
-            //find FoodOrderServe
-            FoodOrderServe searchedFoodOrderServe = foodOrderServeService.findFoodOrderServeByObjectId(objectId);
-            //return FoodOrderServe
-            return  ResponseEntity.ok(searchedFoodOrderServe);
+            //find FoodServe
+            FoodServe searchedFoodServe = foodServeService.findFoodServeByObjectId(objectId);
+            //return FoodServe
+            return  ResponseEntity.ok(searchedFoodServe);
         }
         catch(RuntimeException e)
         {
@@ -44,23 +51,22 @@ public class ServeRestController {
         }
     }
 
-
     @PutMapping("/{objectId}")
-    ResponseEntity<Object> updateFoodOrderServe(@RequestBody UpdateMessage updateMessage,  @PathVariable String objectId)
+    ResponseEntity<Object> updateFoodServe(@RequestBody UpdateMessage updateMessage,  @PathVariable String objectId)
     {
         try
         {
-            FoodOrderServe searchedFoodOrderServe = foodOrderServeService.findFoodOrderServeByObjectId(objectId);
+            FoodServe searchedFoodServe = foodServeService.findFoodServeByObjectId(objectId);
             if(updateMessage.isUpdate())
             {
                 //set served to true
-                searchedFoodOrderServe.setServed(true);
-                //update FoodOrderServe
-                searchedFoodOrderServe = foodOrderServeService.updateFoodOrderServe(searchedFoodOrderServe);
-                //delete FoodOrderServe
-                searchedFoodOrderServe = foodOrderServeService.deleteFoodOrderServe(searchedFoodOrderServe);
+                searchedFoodServe.setServed(true);
+                //update FoodServe
+                searchedFoodServe = foodServeService.updateFoodServe(searchedFoodServe);
+                //delete FoodServe
+                searchedFoodServe = foodServeService.deleteFoodServe(searchedFoodServe);
             }
-            return ResponseEntity.ok(searchedFoodOrderServe);
+            return ResponseEntity.ok(searchedFoodServe);
         }
         catch(RuntimeException e)
         {

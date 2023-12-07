@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("instantOrder")
 public class LoginRestController {
+    //this controller is responsible for
+    //@POST EmployeeLogin --> returns the given json if password and employeeId is correct
     EmployeeService employeeService;
 
     @Autowired
@@ -30,7 +32,7 @@ public class LoginRestController {
         }
         else
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Id or password is wrong!");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("EmployeeId or password is wrong!");
         }
     }
 }

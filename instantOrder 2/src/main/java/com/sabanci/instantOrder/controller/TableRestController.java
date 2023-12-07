@@ -18,6 +18,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/instantOrder")
 public class TableRestController {
+    //this controller is responsible for
+    //@GET List<Table> --> returns List<Table>
+    //@GET Table --> returns Table
+    //@POST Table --> creates a new  Table
+    //@PUT Table --> clears the attributes in Table
+    //@DELETE Table --> deletes an existing Table
+    //@GET List<Categories> --> returns List<Category>
+    //@GET Category --> returns Category
+    //@GET Food --> returns Food
+    //@POST Food --> creates a FoodTable, stores FoodTable in Table, creates a FoodOrder
 
     TableService tableService;
     CategoryService categoryService;
@@ -162,7 +172,6 @@ public class TableRestController {
         }
     }
 
-    //Post method will create a FoodOrderTable, and FoodOrder and send it to the respective databases
     @PostMapping("/tables/{tableId}/menu/categories/{categoryName}/{foodName}")
     public ResponseEntity<Object> createOrder(@PathVariable int tableId, @PathVariable String categoryName, @PathVariable String foodName, @RequestBody NoteAndCount noteAndCount)
     {
@@ -174,12 +183,14 @@ public class TableRestController {
             Category searchedCategory = categoryService.findCategoryByName(categoryName);
             //find Food
             Food searchedFood = categoryService.findFoodByCategoryAndFoodName(searchedCategory,foodName);
-            //create FoodOrderTable
-            FoodOrderTable foodOrderTable = new FoodOrderTable(searchedFood, noteAndCount.getCount(), searchedTable.getTableId());
+            //create FoodTable
+            FoodTable foodTable = new FoodTable(searchedFood, noteAndCount.getCount(), searchedTable.getTableId());
             //create FoodOrder
             FoodOrder foodOrder = new FoodOrder(searchedFood, searchedTable.getTableId(), noteAndCount.getCount(), noteAndCount.getNote(), false);
-            //add FoodOrderTable to Table
-            searchedTable.addFoodOrderTable(foodOrderTable);
+            //add FoodTable to Table
+            searchedTable.addFoodOrderTable(foodTable);
+            //set employeeId
+            searchedTable.setEmployeeId(noteAndCount.getEmployeeId());
             //update Table
             searchedTable = tableService.updateTable(searchedTable);
             //add FoodOrder

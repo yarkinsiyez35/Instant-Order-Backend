@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+//this class is used to store Foods
 @Document
 public class Category {
     @Id

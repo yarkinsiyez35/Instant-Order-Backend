@@ -14,10 +14,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@DependsOn({"foodServiceImp"})      //this is needed to assign to add Food to Category
+@DependsOn({"foodServiceImp"})
 public class CategoryServiceImp implements CategoryService{
-
-    //what happens if an unexisting Food is direclty added to database? , implement it
 
     CategoryRepository categoryRepository;
     FoodRepository foodRepository;          //necessary for reaching Foods

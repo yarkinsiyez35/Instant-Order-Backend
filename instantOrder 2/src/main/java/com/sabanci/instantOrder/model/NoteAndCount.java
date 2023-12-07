@@ -1,17 +1,27 @@
 package com.sabanci.instantOrder.model;
 
 
-//this class will be used to get Note and Count for creating FoodOrder and FoodOrderTable through TableRestController
+//this class is used to get EmployeeId, Note and  Count for creating FoodOrder and FoodTable through TableRestController
 public class NoteAndCount {
+    private int employeeId;
     private String note;
     private int count;
 
     public NoteAndCount() {
     }
 
-    public NoteAndCount(String note, int count) {
+    public NoteAndCount(int employeeId, String note, int count) {
+        this.employeeId = employeeId;
         this.note = note;
         this.count = count;
+    }
+
+    public int getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(int employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getNote() {
