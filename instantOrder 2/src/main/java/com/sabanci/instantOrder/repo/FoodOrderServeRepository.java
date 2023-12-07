@@ -13,8 +13,8 @@ public interface FoodOrderServeRepository extends MongoRepository<FoodOrderServe
 
 
     List<FoodOrderServe> findAllBy();
-    Optional<FoodOrderServe> findFoodOrderServesByObjectId(String s);
-    List<FoodOrderServe> findFoodOrderServesByFoodOrder(FoodOrder foodOrder);
+    Optional<FoodOrderServe> findFoodOrderServeByObjectId(String s);
+    Optional<FoodOrderServe> findFoodOrderServeByFoodOrder(FoodOrder foodOrder);
     List<FoodOrderServe> findFoodOrderServesByServed(boolean b);
 
 }

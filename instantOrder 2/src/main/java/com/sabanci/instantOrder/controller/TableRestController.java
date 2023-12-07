@@ -4,6 +4,7 @@ package com.sabanci.instantOrder.controller;
 
 import com.sabanci.instantOrder.model.*;
 import com.sabanci.instantOrder.service.CategoryService;
+import com.sabanci.instantOrder.service.FoodOrderService;
 import com.sabanci.instantOrder.service.TableService;
 
 import java.util.List;
@@ -20,11 +21,13 @@ public class TableRestController {
 
     TableService tableService;
     CategoryService categoryService;
+    FoodOrderService foodOrderService;
 
     @Autowired
-    TableRestController(TableService tableService, CategoryService categoryService1){
+    TableRestController(TableService tableService, CategoryService categoryService1, FoodOrderService foodOrderService1){
         this.tableService = tableService;
         this.categoryService = categoryService1;
+        this.foodOrderService = foodOrderService1;
     }
 
 
@@ -179,7 +182,9 @@ public class TableRestController {
             searchedTable.addFoodOrderTable(foodOrderTable);
             //update Table
             searchedTable = tableService.updateTable(searchedTable);
-            //foodOrderService.addFoodOrder(foodOrder);
+            //add FoodOrder
+            foodOrderService.addFoodOrder(foodOrder);
+            //return Table
             return ResponseEntity.ok(searchedTable);
         }
         catch(RuntimeException e)
