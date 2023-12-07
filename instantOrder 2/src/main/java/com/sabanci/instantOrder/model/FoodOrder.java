@@ -76,5 +76,22 @@ public class FoodOrder {
     public void setCookingStatus(boolean cookingStatus) {
         this.cookingStatus = cookingStatus;
     }
+
+    public boolean hasNull()
+    {
+        return this.food.getName() == null || this.food.getPrice() == 0 || this.tableId == 0;
+    }
+
+    @Override
+    public String toString() {
+        return "FoodOrder{" +
+                "objectId='" + objectId + '\'' +
+                ", food=" + food +
+                ", tableId=" + tableId +
+                ", count=" + count +
+                ", note='" + note + '\'' +
+                ", cookingStatus=" + cookingStatus +
+                '}';
+    }
 }
 

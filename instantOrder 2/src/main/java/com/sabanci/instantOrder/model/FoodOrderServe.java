@@ -13,7 +13,6 @@ public class FoodOrderServe {
     private String objectId;
 
     @Field("foodOrder")
-    @DBRef
     private FoodOrder foodOrder;
 
     @Field("served")
@@ -45,5 +44,14 @@ public class FoodOrderServe {
 
     public void setServed(boolean served) {
         this.served = served;
+    }
+
+    @Override
+    public String toString() {
+        return "FoodOrderServe{" +
+                "objectId='" + objectId + '\'' +
+                ", foodOrder=" + foodOrder +
+                ", served=" + served +
+                '}';
     }
 }
